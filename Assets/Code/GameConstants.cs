@@ -24,4 +24,7 @@ public class GameConstants : ScriptableObject
     /// </summary>
     public float maxAngleToRipPlant;
 
+    public string pathToHarvestBlockPrefab;
+    public int backpackCapacity;
+
 }
