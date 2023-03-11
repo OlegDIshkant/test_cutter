@@ -1,15 +1,22 @@
-
-
 using UnityEngine;
 
 
 public class StorehouseController : IStorehouseInfoProvider
 {
+    private readonly Storehouse _storehouse;
+
     public bool PlayerInStorehouseNow { get; private set; }
+
+
+    public StorehouseController()
+    {
+        _storehouse = GameObject.FindObjectOfType<Storehouse>();
+    }
+
 
     public void Update()
     {
-
+        PlayerInStorehouseNow = _storehouse.PlayerIsInside();
     }
 
 }
@@ -17,6 +24,5 @@ public class StorehouseController : IStorehouseInfoProvider
 
 public class IStorehouseInfoProvider
 {
-
     bool PlayerInStorehouseNow { get; }
 }
