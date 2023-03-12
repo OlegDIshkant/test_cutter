@@ -22,7 +22,7 @@ public class StorehouseController : IStorehouseInfoProvider
 }
 
 
-public class IStorehouseInfoProvider
+public interface IStorehouseInfoProvider
 {
     bool PlayerInStorehouseNow { get; }
 }
