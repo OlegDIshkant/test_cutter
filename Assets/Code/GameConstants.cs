@@ -1,19 +1,18 @@
 using UnityEngine;
 
+
+[CreateAssetMenu(fileName = "GameConstants", menuName = "ScriptableObjects /GameConstants", order = 1)]
 public class GameConstants : ScriptableObject
 {
+    private static GameConstants _instance;
+
     public static GameConstants GetInstance()
     {
-        var instances = FindObjectsOfType<GameConstants>();
-        if (instances.Length > 1)
+        if (_instance == null)
         {
-            throw new System.Exception("Too many instances.");
+            _instance = (GameConstants)Resources.Load("Settings/GameConstants");
         }
-        else if (instances.Length < 0)
-        {
-            throw new System.Exception("No instances.");
-        }
-        return instances[0];
+        return _instance;
     }
 
 
