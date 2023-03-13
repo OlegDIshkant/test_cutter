@@ -74,7 +74,7 @@ public class GardenSpotsController : IGardenSpotsInfoProvider
     {
         foreach (var spot in _gardenSpots)
         {
-            foreach (var plant in spot.NearPlayerPlantIds)
+            foreach (var plant in spot.HarvestablePlantIds)
             {
                 var position = spot.GetPlantPosition(plant);
                 if (PlantCanBeRipped(position, playerPosition, playerDirection, out ripInfo))
@@ -112,9 +112,9 @@ public class GardenSpotsController : IGardenSpotsInfoProvider
     {
         foreach (var spot in _gardenSpots)
         {
-            if (spot.NearPlayerPlantIds.Any())
+            if (spot.HarvestablePlantIds.Any())
             {
-                return spot.GetPlantPosition(spot.NearPlayerPlantIds.First());
+                return spot.GetPlantPosition(spot.HarvestablePlantIds.First());
             }
         }
 

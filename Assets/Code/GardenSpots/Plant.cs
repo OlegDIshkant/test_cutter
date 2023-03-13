@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class Plant : MonoBehaviour
 {
-    public event Action<Plant> OnPlayerComeClose;
-    public event Action<Plant> OnPlayerGoAway;
+    public event Action<Plant> OnCanBeHarvestedNow;
+    public event Action<Plant> OnCanNotBeHarvestedNow;
 
     [SerializeField]
     private GameObject _grownAppearence;
@@ -15,7 +15,8 @@ public class Plant : MonoBehaviour
 
     private TriggerCatcher _playerCatcher;
 
-    public bool IsGrown { get; private set; }
+    private bool _isGrown = false;
+    private bool _playerIsClose = false;
 
 
 
@@ -25,13 +26,14 @@ public class Plant : MonoBehaviour
     /// </summary>
     public bool TryGrow(bool skipAnimations = false)
     {
-        if (IsGrown)
+        if (_isGrown)
         {
             return false;
         }
 
         SetAppearence(asGrown: true);
-        IsGrown = true;
+        _isGrown = true;
+        DecideIfCanBeHarvestedNow();
 
         return true;
     }
@@ -42,13 +44,14 @@ public class Plant : MonoBehaviour
     /// </summary>
     public bool TryRip()
     {
-        if (!IsGrown)
+        if (!_isGrown)
         {
             return false;
         }
 
         SetAppearence(asGrown: false);
-        IsGrown = false;
+        _isGrown = false;
+        DecideIfCanBeHarvestedNow();
 
         return true;
     }
@@ -84,14 +87,21 @@ public class Plant : MonoBehaviour
 
         if (_playerCatcher.HasChanged)
         {
-            if (_playerCatcher.CatchedObjects.Any())
-            {
-                OnPlayerComeClose?.Invoke(this);
-            }
-            else
-            {
-                OnPlayerGoAway?.Invoke(this);
-            }
+            _playerIsClose = _playerCatcher.CatchedObjects.Any();
+            DecideIfCanBeHarvestedNow();
+        }
+    }
+
+
+    private void DecideIfCanBeHarvestedNow()
+    {
+        if (_playerIsClose && _isGrown)
+        {
+            OnCanBeHarvestedNow?.Invoke(this);
+        }
+        else
+        {
+            OnCanNotBeHarvestedNow?.Invoke(this);
         }
     }
 

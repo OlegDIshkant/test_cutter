@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class GardenSpot : MonoBehaviour
 {
-    private List<int> _nearPlayerPlantIds = new List<int>();
+    private List<int> _harvestablePlantIds = new List<int>();
     private List<Plant> _plants;
 
-    public ReadOnlyCollection<int> NearPlayerPlantIds { get; private set; }
+    public ReadOnlyCollection<int> HarvestablePlantIds { get; private set; }
 
 
     /// <summary>
@@ -44,12 +44,12 @@ public class GardenSpot : MonoBehaviour
 
     private void SetUpPlants()
     {
-        NearPlayerPlantIds = new ReadOnlyCollection<int>(_nearPlayerPlantIds);
+        HarvestablePlantIds = new ReadOnlyCollection<int>(_harvestablePlantIds);
         _plants = this.transform.GetComponentsInChildren<Plant>().ToList();
         foreach (var plant in _plants)
         {
-            plant.OnPlayerComeClose += Plant_OnPlayerComeClose;
-            plant.OnPlayerGoAway += Plant_OnPlayerGoAway;
+            plant.OnCanBeHarvestedNow += Plant_OnCanBeHarvestedNow;
+            plant.OnCanNotBeHarvestedNow += Plant_OnCanNotBeHarvestedNow;
         }
     }
 
@@ -60,20 +60,19 @@ public class GardenSpot : MonoBehaviour
     private Plant GetPlant(int plantId) => _plants[plantId];
 
 
-    private void Plant_OnPlayerGoAway(Plant plant)
+    private void Plant_OnCanNotBeHarvestedNow(Plant plant)
     {
-        var plantId = PlantId(plant);
-        _nearPlayerPlantIds.Remove(plantId);
+        _harvestablePlantIds.Remove(PlantId(plant));
     }
 
 
-    private void Plant_OnPlayerComeClose(Plant plant)
+    private void Plant_OnCanBeHarvestedNow(Plant plant)
     {
         var plantId = PlantId(plant);
 
-        if (!_nearPlayerPlantIds.Contains(plantId))
+        if (!_harvestablePlantIds.Contains(plantId))
         {
-            _nearPlayerPlantIds.Add(plantId);            
+            _harvestablePlantIds.Add(plantId);            
         }
     }
 
