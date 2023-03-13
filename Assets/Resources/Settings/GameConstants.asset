@@ -18,3 +18,4 @@ MonoBehaviour:
   playerSpeed: 5
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
+  secToRegeneratePlant: 10

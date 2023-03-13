@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ public class Plant : MonoBehaviour
 
     private bool _isGrown = false;
     private bool _playerIsClose = false;
+    private Coroutine _regeneratingProccess;
 
 
 
@@ -53,7 +55,30 @@ public class Plant : MonoBehaviour
         _isGrown = false;
         DecideIfCanBeHarvestedNow();
 
+        StartRegenerating();
+
+
         return true;
+    }
+
+
+    private void StartRegenerating()
+    {
+
+        if (_regeneratingProccess != null)
+        {
+            StopCoroutine(_regeneratingProccess);
+            _regeneratingProccess = null;
+        }
+
+        _regeneratingProccess = StartCoroutine(Regenerating());
+    }
+
+
+    private IEnumerator Regenerating()
+    {
+        yield return new WaitForSeconds(GameConstants.GetInstance().secToRegeneratePlant);
+        TryGrow();
     }
 
 
