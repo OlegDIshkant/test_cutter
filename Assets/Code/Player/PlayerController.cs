@@ -61,8 +61,14 @@ public class PlayerController : IPlayerInfoProvider
 
     private PlayerInfo UpdatePlayer(IGardenSpotsInfoProvider gardenSpots)
     {
-        var moveInfo = _movement.MakeDecision();
-        var ripInfo = _ripping.MakeDecision(moveInfo, gardenSpots.NearPlayerPlantPosition);
+        var input = new InputArgs()
+        { 
+            rippingInProgress = _animator.IsRipAnimationPlaying(),
+            rippablePlantPosition = gardenSpots.NearPlayerPlantPosition
+        };
+
+        var moveInfo = _movement.MakeDecision(input);
+        var ripInfo = _ripping.MakeDecision(moveInfo, input);
 
         return ApplyDecisions(moveInfo, ripInfo);
     }

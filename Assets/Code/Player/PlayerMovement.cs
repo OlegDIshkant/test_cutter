@@ -18,10 +18,11 @@ public class PlayerMovement
     }
 
 
-    public Result MakeDecision()
+    public Result MakeDecision(InputArgs input)
     {
         return new Result()
         {
+            //velocity = input.rippingInProgress ? Vector3.zero : CalcVelocity(CalcMoveVector())
             velocity = CalcVelocity(CalcMoveVector())
         };
     }

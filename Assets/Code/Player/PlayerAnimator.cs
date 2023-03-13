@@ -11,8 +11,6 @@ public class PlayerAnimator : MonoBehaviour
 
     private Animator _animator;
 
-    private bool _ripAnimWasLaunched = false;
-
 
     private void Awake()
     {
@@ -31,7 +29,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void PlayRunAnim()
     {
-        MakeSureRipWasCanceled();
+        MakeSureRipTriggerReset();
 
         if (!_animator.GetBool(RUN_ANIM_ID))
         {
@@ -41,15 +39,13 @@ public class PlayerAnimator : MonoBehaviour
 
     public void PlayRipAnim()
     {
-        _ripAnimWasLaunched = true;
-
         _animator.ResetTrigger(RIP_ANIM_ID);
         _animator.SetTrigger(RIP_ANIM_ID);
     }
 
     public void PlayIdleAnim()
     {
-        MakeSureRipWasCanceled();
+        MakeSureRipTriggerReset();
 
         if (_animator.GetBool(RUN_ANIM_ID))
         {
@@ -58,9 +54,9 @@ public class PlayerAnimator : MonoBehaviour
     }
 
 
-    private void MakeSureRipWasCanceled()
+    private void MakeSureRipTriggerReset()
     {
-        if (_ripAnimWasLaunched)
+        if (IsRipAnimationPlaying())
         {
             _animator.ResetTrigger(RIP_ANIM_ID);
         }
@@ -68,6 +64,8 @@ public class PlayerAnimator : MonoBehaviour
 
 
     public bool IsRipAnimationPlaying() =>
+        _animator.IsInTransition(0) ?
+        _animator.GetCurrentAnimatorStateInfo(0).IsName(RIP_ANIM_ID) || _animator.GetNextAnimatorStateInfo(0).IsName(RIP_ANIM_ID) :
         _animator.GetCurrentAnimatorStateInfo(0).IsName(RIP_ANIM_ID);
 
 

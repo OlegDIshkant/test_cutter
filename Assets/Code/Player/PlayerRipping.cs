@@ -15,7 +15,7 @@ public class PlayerRipping
     private readonly Func<Vector3> _GetPlayerPosition;
     private readonly float _turningSpeed;
 
-    private Func<MovementInfo, Vector3?, Result> UpdateAction;
+    private Func<MovementInfo, InputArgs, Result> UpdateAction;
 
 
 
@@ -31,15 +31,15 @@ public class PlayerRipping
     }
 
 
-    public Result MakeDecision(MovementInfo movementInfo, Vector3? nearPlantPosition)
+    public Result MakeDecision(MovementInfo movementInfo, InputArgs input)
     {
-        return UpdateAction(movementInfo, nearPlantPosition);
+        return UpdateAction(movementInfo, input);
     }
     
 
-    private Result DoNothing(MovementInfo movementInfo, Vector3? nearPlantPosition)
+    private Result DoNothing(MovementInfo movementInfo, InputArgs input)
     {
-        if (MayRip(movementInfo.isMovingNow, nearPlantPosition, out var targetRotation))
+        if (MayStartNewRip(movementInfo.isMovingNow, input, out var targetRotation))
         {
             if (targetRotation != null)
             {
@@ -51,9 +51,9 @@ public class PlayerRipping
     }
 
 
-    private Result TurningToPlantAndRipping(MovementInfo movementInfo, Vector3? nearPlantPosition)
+    private Result TurningToPlantAndRipping(MovementInfo movementInfo, InputArgs input)
     {
-        if (MayRip(movementInfo.isMovingNow, nearPlantPosition, out var targetRotation))
+        if (MayStartNewRip(movementInfo.isMovingNow, input, out var targetRotation))
         {
             if (targetRotation == null)
             {
@@ -73,12 +73,14 @@ public class PlayerRipping
 
 
 
-    private bool MayRip(bool isMovingNow, Vector3? nearPlantPosition, out Quaternion? targetRotation)
+    private bool MayStartNewRip(bool isMovingNow, InputArgs input, out Quaternion? targetRotation)
     {
         targetRotation = null;
-        if (isMovingNow) return false;
 
-        var plantPosition = nearPlantPosition;
+        if (isMovingNow) return false;
+        if (input.rippingInProgress) return false;
+
+        var plantPosition = input.rippablePlantPosition;
         if (plantPosition == null) return false;
 
         var rotation = CalcTargetRotation(plantPosition.Value);
