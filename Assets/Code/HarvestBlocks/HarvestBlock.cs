@@ -46,6 +46,7 @@ public class HarvestBlock : MonoBehaviour
 
         _behaviour.OnStop();
         _behaviour = BehaviourForState(state, args);
+        _behaviour.OnStart();
     }
 
 
@@ -99,6 +100,8 @@ public class HarvestBlock : MonoBehaviour
 
         public virtual void OnStop() { }
 
+        public virtual void OnStart() { }
+
 
         protected void ChangeState(States state, object args) => _ToChangeState(state, args);
     }
@@ -135,6 +138,11 @@ public class HarvestBlock : MonoBehaviour
             // ...
         }
 
+
+        public override void OnStart()
+        {
+            MasterBlock.transform.position = _args.appearPoint;
+        }
 
         private void Finish()
         {

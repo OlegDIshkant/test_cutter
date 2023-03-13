@@ -16,5 +16,5 @@ MonoBehaviour:
   maxAngleToRipPlant: 5
   turningToPlantAngleSpeed: 3
   playerSpeed: 5
-  pathToHarvestBlockPrefab: 
+  pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40

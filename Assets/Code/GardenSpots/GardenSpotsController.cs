@@ -10,6 +10,8 @@ public class GardenSpotsController : IGardenSpotsInfoProvider
     private GameConstants _gameConstants;
 
     public Vector3? NearPlayerPlantPosition => TryFindNearPlayerPlantPosition();
+
+
     public ReadOnlyCollection<PlantRipInfo> RecentRippings { get; private set; }
 
 
@@ -72,10 +74,12 @@ public class GardenSpotsController : IGardenSpotsInfoProvider
     {
         foreach (var spot in _gardenSpots)
         {
-            foreach (var position in PlantPositions(spot))
+            foreach (var plant in spot.NearPlayerPlantIds)
             {
+                var position = spot.GetPlantPosition(plant);
                 if (PlantCanBeRipped(position, playerPosition, playerDirection, out ripInfo))
                 {
+                    spot.RipPlant(plant);
                     return true;
                 }
             }
@@ -86,14 +90,10 @@ public class GardenSpotsController : IGardenSpotsInfoProvider
     }
 
 
-    private IEnumerable<Vector3> PlantPositions(GardenSpot spot) =>
-        spot.NearPlayerPlantIds.Select(id => spot.GetPlantPosition(id));
-
-
     private bool PlantCanBeRipped(Vector3 plantPosition, Vector3 playerPosition, Vector3 playerDirection, out PlantRipInfo ripInfo)
     {
         plantPosition.y = playerPosition.y = playerDirection.y = 0;
-        var playerToPlant = playerPosition - plantPosition;
+        var playerToPlant = plantPosition - playerPosition;
 
         if (Vector3.Angle(playerToPlant, playerDirection) <= _gameConstants.maxAngleToRipPlant)
         {

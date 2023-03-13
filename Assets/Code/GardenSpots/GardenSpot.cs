@@ -27,7 +27,13 @@ public class GardenSpot : MonoBehaviour
     /// <summary>
     /// Узнать расположение растения по его индексу.
     /// </summary>
-    public Vector3 GetPlantPosition(int plantId) => _plants[plantId].transform.position;
+    public Vector3 GetPlantPosition(int plantId) => GetPlant(plantId).transform.position;
+
+
+    /// <summary>
+    /// Срезать урожай с растения.
+    /// </summary>
+    public void RipPlant(int plantId) => GetPlant(plantId).TryRip();
 
 
     private void Awake()
@@ -51,10 +57,13 @@ public class GardenSpot : MonoBehaviour
 
     private int PlantId(Plant plant) => _plants.IndexOf(plant);
 
+    private Plant GetPlant(int plantId) => _plants[plantId];
+
 
     private void Plant_OnPlayerGoAway(Plant plant)
     {
-        _nearPlayerPlantIds.Remove(PlantId(plant));
+        var plantId = PlantId(plant);
+        _nearPlayerPlantIds.Remove(plantId);
     }
 
 
@@ -64,7 +73,9 @@ public class GardenSpot : MonoBehaviour
 
         if (!_nearPlayerPlantIds.Contains(plantId))
         {
-            _nearPlayerPlantIds.Add(plantId);
+            _nearPlayerPlantIds.Add(plantId);            
         }
     }
+
+
 }

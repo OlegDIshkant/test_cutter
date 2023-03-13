@@ -8,26 +8,49 @@ public class Plant : MonoBehaviour
     public event Action<Plant> OnPlayerComeClose;
     public event Action<Plant> OnPlayerGoAway;
 
+    [SerializeField]
+    private GameObject _grownAppearence;
+    [SerializeField]
+    private GameObject _rippedAppearence;
+
     private TriggerCatcher _playerCatcher;
 
-    public bool MayBeGrownNow { get; private set; }
+    public bool IsGrown { get; private set; }
+
+
 
 
     /// <summary>
     /// Сделать растение сново готовым отдать урожай.
     /// </summary>
-    public void TryGrow(bool skipAnimations = false)
+    public bool TryGrow(bool skipAnimations = false)
     {
+        if (IsGrown)
+        {
+            return false;
+        }
 
+        SetAppearence(asGrown: true);
+        IsGrown = true;
+
+        return true;
     }
 
 
     /// <summary>
     /// Забрать урожай.
     /// </summary>
-    public void TryRip()
+    public bool TryRip()
     {
+        if (!IsGrown)
+        {
+            return false;
+        }
 
+        SetAppearence(asGrown: false);
+        IsGrown = false;
+
+        return true;
     }
 
 
@@ -70,6 +93,13 @@ public class Plant : MonoBehaviour
                 OnPlayerGoAway?.Invoke(this);
             }
         }
+    }
+
+
+    private void SetAppearence(bool asGrown)
+    {
+        _grownAppearence.SetActive(asGrown);
+        _rippedAppearence.SetActive(!asGrown);
     }
 
 
