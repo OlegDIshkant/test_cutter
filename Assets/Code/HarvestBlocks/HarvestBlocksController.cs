@@ -8,6 +8,7 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     private HashSet<HarvestBlock> _selledBlocks = new HashSet<HarvestBlock>();
     private Object _harvestBlockPrefab;
     private Stack<HarvestBlock> _blocksInBackpack;
+    private Transform _backpack;
 
     public int BackpackCapacity { get; }
     public int BlocksInBackpackAmount => _blocksInBackpack.Count;
@@ -18,12 +19,14 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
         _harvestBlockPrefab = Resources.Load(GameConstants.GetInstance().pathToHarvestBlockPrefab);
         BackpackCapacity = GameConstants.GetInstance().backpackCapacity;
         _blocksInBackpack = new Stack<HarvestBlock>(BackpackCapacity);
+        _backpack = new GameObject("Backpack").transform;
     }
 
 
     public void Update(IPlayerInfoProvider player, IGardenSpotsInfoProvider gardenSpots)
     {
         SpawnBlocksForRippedPlants(gardenSpots);
+        UpdateBackpack(player);
         SellingBlocksInBackpack(player);
         DeleteSelledBlocks();
     }
@@ -37,6 +40,13 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
             _blocks.Add(block);
             block.ChangeState(HarvestBlock.States.APPEARING, PrepareArgsForNewBlock(block, ripInfo));
         }
+    }
+
+
+    private void UpdateBackpack(IPlayerInfoProvider player)
+    {
+        _backpack.position = player.BackpackPosition; //player.Position - player.Direction * consts.backpackOffset + Vector3.up * consts.backpackAltitude;
+        _backpack.rotation = player.BackpackRotation;
     }
 
 
@@ -66,6 +76,40 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
             return _blocksInBackpack.Count - 1;
         }
         return null;
+    }
+
+
+    private void AttachToBackPack(Transform blockTransform, int placeIndex)
+    {
+        blockTransform.transform.SetParent(_backpack);
+        blockTransform.localPosition = CalcPositionInBackpack(placeIndex);
+        blockTransform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
+        blockTransform.localScale = CalcScale();
+    }
+
+
+    private Vector3 CalcPositionInBackpack(int placeIndex)
+    {
+        var constants = GameConstants.GetInstance();
+        
+        var column = (int)(placeIndex / constants.backpackWidth);
+        var wid = placeIndex % constants.backpackWidth;
+        var len = (int)(column / constants.backpackHeight);
+        var hei = column % constants.backpackHeight;
+
+        float widStart = -constants.widthDistance * (constants.backpackWidth - 1) / 2;
+
+        return new Vector3(
+            widStart + wid * constants.widthDistance,
+            hei * constants.heightDistance,
+            -len * constants.lenghtDistance);
+    }
+
+
+    private Vector3 CalcScale()
+    {
+        var scale = 1f / GameConstants.GetInstance().blockInBackpackShrinkFactor;
+        return new Vector3(scale, scale, scale);
     }
 
 
@@ -110,7 +154,6 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     private System.Func<HarvestBlock.Idle.Args> IdleArgs(HarvestBlock block) =>
         () => new HarvestBlock.Idle.Args()
         {
-            playerCatcher = block.GetComponent<TriggerCatcher>(),
             TryReservePlaceInBackpack = TryReservePlaceInBackPack,
             CreateMoveToBackpackArgs = MoveToBackpackArgs
         };
@@ -121,6 +164,7 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
         new HarvestBlock.MoveToBackpack.Args()
         {
             placeIndex = placeIndex,
+            AttachToBackpack = AttachToBackPack,
             CreateInBackpackArgs = InBackpackArgs
         };
 

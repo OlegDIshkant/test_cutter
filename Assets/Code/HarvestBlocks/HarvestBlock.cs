@@ -48,6 +48,8 @@ public class HarvestBlock : MonoBehaviour
         _behaviour.OnStop();
         _behaviour = BehaviourForState(state, args);
         _behaviour.OnStart();
+
+        CurrentState = state;
     }
 
 
@@ -138,7 +140,10 @@ public class HarvestBlock : MonoBehaviour
 
         public override void Update()
         {
-            // ...
+            if (_landed)
+            {
+                Finish();
+            }
         }
 
 
@@ -164,16 +169,18 @@ public class HarvestBlock : MonoBehaviour
     {
         public struct Args
         {
-            public TriggerCatcher playerCatcher;
             public Func<HarvestBlock, int?> TryReservePlaceInBackpack;
             public Func<int, MoveToBackpack.Args> CreateMoveToBackpackArgs; // int-параметр это индекс места в рюкзаке
         }
 
         private readonly Args _args;
+        private readonly TriggerCatcher _playerCatcher;
 
         public Idle(Args args, HarvestBlock master, Action<States, object> ToChangeState) : base(master, ToChangeState)
         {
             _args = args;
+            _playerCatcher = master.GetComponentInChildren<TriggerCatcher>();
+            _playerCatcher.SetUpTarget(GameConstants.GetInstance().playerTag);
         }
 
         public override void Update()
@@ -185,7 +192,7 @@ public class HarvestBlock : MonoBehaviour
         }
 
 
-        private bool PlayerIsNearBlock() => _args.playerCatcher.CatchedObjects.Any();
+        private bool PlayerIsNearBlock() => _playerCatcher.CatchedObjects.Any();
 
 
         private bool TryReservePlaceInBackpack(out int placeIndex)
@@ -212,6 +219,7 @@ public class HarvestBlock : MonoBehaviour
         public struct Args
         {
             public int placeIndex;
+            public Action<Transform, int> AttachToBackpack;
             public Func<int, InBackpack.Args> CreateInBackpackArgs; // int-параметр это индекс места в рюкзаке
         }
 
@@ -226,7 +234,17 @@ public class HarvestBlock : MonoBehaviour
 
         public override void Update()
         {
-            //...
+            Finish();
+        }
+
+
+        public override void OnStart()
+        {
+            _args.AttachToBackpack(MasterBlock.transform, _args.placeIndex);
+            /*MasterBlock.transform
+                .DOJump(_args.GetPositionInBackPack(_args.placeIndex), 1, 1, 0.1f)
+                .OnComplete(() => _inBackPack = true)
+                .Play();*/
         }
 
 
@@ -244,6 +262,7 @@ public class HarvestBlock : MonoBehaviour
         public struct Args
         {
             public int placeIndex;
+            public Func<int, Vector3> GetPositionInBackPack;
         }
 
         private readonly Args _args;
@@ -257,8 +276,6 @@ public class HarvestBlock : MonoBehaviour
 
         public override void Update()
         {
-            //...
-
         }
 
 

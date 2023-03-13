@@ -12,12 +12,14 @@ public class PlayerController : IPlayerInfoProvider
     private readonly Rigidbody _rigidbody;
     private readonly Transform _rotatableBody;
     private readonly PlayerAnimator _animator;
+    private readonly Transform _backPack;
 
     private bool _isRipMoment = false;
 
     public Vector3 Position { get; private set; }
     public Vector3 Direction { get; private set; }
     public Vector3 BackpackPosition { get; private set; }
+    public Quaternion BackpackRotation { get; private set; }
     public bool IsMomentToRip { get; private set; }
     public bool IsInStorehouse { get; private set; }
 
@@ -28,6 +30,7 @@ public class PlayerController : IPlayerInfoProvider
         _rigidbody = playerGo.GetComponent<Rigidbody>();
         _rotatableBody = playerGo.transform.GetChild(0);
         _animator = _rotatableBody.GetComponent<PlayerAnimator>();
+        _backPack = GameObject.Find("BackpackPoint").transform;
         if (_animator == null)
         {
             _animator = _rotatableBody.GetComponentInChildren<PlayerAnimator>();
@@ -52,7 +55,8 @@ public class PlayerController : IPlayerInfoProvider
         IsInStorehouse = storehouse.PlayerInStorehouseNow;
         Position = playerInfo.position;
         Direction = playerInfo.direction;
-        BackpackPosition = playerInfo.position;
+        BackpackPosition = _backPack.position;
+        BackpackRotation = _backPack.rotation;
         IsMomentToRip = _isRipMoment;
 
         _isRipMoment = false; // сразу обнуляем флаг, чтобы мочь отловить следующее подобное сообщение
@@ -163,6 +167,7 @@ public interface IPlayerInfoProvider
     Vector3 Position { get; }
     Vector3 Direction { get; }
     Vector3 BackpackPosition { get; }
+    Quaternion BackpackRotation { get; }
 
     /// <summary>
     /// Флаг означающий, что игрок выполняет движение скоса урожая и его инструмент как раз находится в позиции для среза растения.

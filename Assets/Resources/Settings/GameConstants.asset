@@ -20,3 +20,9 @@ MonoBehaviour:
   backpackCapacity: 40
   secToRegeneratePlant: 10
   blockAppearDistance: 2.5
+  backpackWidth: 4
+  backpackHeight: 5
+  heightDistance: 0.18
+  widthDistance: 0.17
+  lenghtDistance: 0.22
+  blockInBackpackShrinkFactor: 2

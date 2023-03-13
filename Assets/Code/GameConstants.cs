@@ -37,4 +37,16 @@ public class GameConstants : ScriptableObject
 
     public float blockAppearDistance;
 
+    public int backpackWidth;
+    public int backpackHeight;
+    
+    public float heightDistance;
+    public float widthDistance;
+    public float lenghtDistance;
+
+    public float blockInBackpackShrinkFactor;
+
+    //public float backpackOffset;
+    //public float backpackAltitude;
+
 }
