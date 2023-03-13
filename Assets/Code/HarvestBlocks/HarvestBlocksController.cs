@@ -101,7 +101,7 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
         new HarvestBlock.Appear.Args
         {
             appearPoint = ripInfo.RipPosition,
-            landPoint = ripInfo.RipPosition + ripInfo.RipDirection,
+            landPoint = ripInfo.RipPosition + ripInfo.RipDirection * GameConstants.GetInstance().blockAppearDistance,
             CreateIdleArgs = IdleArgs(block)
         };
 

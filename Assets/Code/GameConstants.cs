@@ -33,6 +33,8 @@ public class GameConstants : ScriptableObject
     public string pathToHarvestBlockPrefab;
     public int backpackCapacity;
 
-    public int secToRegeneratePlant; 
+    public int secToRegeneratePlant;
+
+    public float blockAppearDistance;
 
 }

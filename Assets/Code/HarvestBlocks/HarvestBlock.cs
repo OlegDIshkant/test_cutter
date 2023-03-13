@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -128,6 +129,8 @@ public class HarvestBlock : MonoBehaviour
 
         private readonly Args _args;
 
+        private bool _landed = false;
+
         public Appear(Args args, HarvestBlock master, Action<States, object> ToChangeState) : base(master, ToChangeState)
         {
             _args = args;
@@ -142,6 +145,11 @@ public class HarvestBlock : MonoBehaviour
         public override void OnStart()
         {
             MasterBlock.transform.position = _args.appearPoint;
+            MasterBlock.transform
+                .DOJump(_args.landPoint, 2f, 1, 0.35f, false)
+                .OnComplete(() => _landed = true)
+                .Play();
+            
         }
 
         private void Finish()

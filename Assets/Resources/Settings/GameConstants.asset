@@ -19,3 +19,4 @@ MonoBehaviour:
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
   secToRegeneratePlant: 10
+  blockAppearDistance: 2.5
