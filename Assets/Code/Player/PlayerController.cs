@@ -6,13 +6,13 @@ using RipInfo = PlayerRipping.Result;
 
 public class PlayerController : IPlayerInfoProvider
 {
-
     private readonly PlayerMovement _movement;
     private readonly PlayerRipping _ripping;
     private readonly Rigidbody _rigidbody;
     private readonly Transform _rotatableBody;
     private readonly PlayerAnimator _animator;
     private readonly Transform _backPack;
+    private readonly GameObject _ripTool;
 
     private bool _isRipMoment = false;
 
@@ -31,11 +31,14 @@ public class PlayerController : IPlayerInfoProvider
         _rotatableBody = playerGo.transform.GetChild(0);
         _animator = _rotatableBody.GetComponent<PlayerAnimator>();
         _backPack = GameObject.Find("BackpackPoint").transform;
+        _ripTool = GameObject.Find("RipTool");
         if (_animator == null)
         {
             _animator = _rotatableBody.GetComponentInChildren<PlayerAnimator>();
         }
         _animator.OnRipMoment += _animator_OnRipMoment;
+
+        
 
         _movement = new PlayerMovement();
         _ripping = new PlayerRipping(
@@ -82,6 +85,7 @@ public class PlayerController : IPlayerInfoProvider
     {
         var (position, direction) = HandlePhysicalPlacement(moveInfo, ripInfo);
         HandleAnimations(moveInfo, ripInfo);
+        HandleRipToolVisibility(_animator.IsRipAnimationPlaying());
 
         return new PlayerInfo()
         {
@@ -153,7 +157,7 @@ public class PlayerController : IPlayerInfoProvider
         public Vector3 direction;
     }
 
-
+    private void HandleRipToolVisibility(bool toShow) => _ripTool.SetActive(toShow);
 
 
 }
