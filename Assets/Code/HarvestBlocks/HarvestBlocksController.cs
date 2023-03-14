@@ -59,6 +59,7 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
         foreach (var block in _selledBlocks)
         {
             _blocks.Remove(block);
+            GameObject.Destroy(block.gameObject);
         }
         _selledBlocks.Clear();
     }
@@ -85,6 +86,12 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
         blockTransform.localPosition = CalcPositionInBackpack(placeIndex);
         blockTransform.localRotation = Quaternion.LookRotation(Vector3.forward, Vector3.up);
         blockTransform.localScale = CalcScale();
+    }
+
+
+    private void DetachFromBackpack(Transform blockTransform)
+    {
+        blockTransform.transform.SetParent(null);
     }
 
 
@@ -181,6 +188,7 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     private HarvestBlock.Disapeare.Args DisapearArgs() =>
         new HarvestBlock.Disapeare.Args()
         {
+            DetachFromBackpack = DetachFromBackpack,
             OnBlockDisapeared = OnBlockDisapeared
         };
 

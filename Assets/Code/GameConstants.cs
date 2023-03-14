@@ -49,4 +49,7 @@ public class GameConstants : ScriptableObject
     //public float backpackOffset;
     //public float backpackAltitude;
 
+    public float blockFlyDistanceOnSell;
+    public float blockFlyDurationOnSell;
+
 }

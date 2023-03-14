@@ -18,7 +18,7 @@ MonoBehaviour:
   playerSpeed: 5
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
-  secToRegeneratePlant: 10
+  secToRegeneratePlant: 2
   blockAppearDistance: 2.5
   backpackWidth: 4
   backpackHeight: 5
@@ -26,3 +26,5 @@ MonoBehaviour:
   widthDistance: 0.17
   lenghtDistance: 0.22
   blockInBackpackShrinkFactor: 2
+  blockFlyDistanceOnSell: 0.8
+  blockFlyDurationOnSell: 0.1

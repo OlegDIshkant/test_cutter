@@ -61,7 +61,7 @@ public class HarvestBlock : MonoBehaviour
             case States.IDLING: return CurrentState == States.APPEARING;
             case States.MOVING_TO_BACKPACK: return CurrentState == States.IDLING;
             case States.IN_BACKPACK: return CurrentState == States.MOVING_TO_BACKPACK;
-            case States.DISAPEARING: return CurrentState == States.MOVING_TO_BACKPACK;
+            case States.DISAPEARING: return CurrentState == States.IN_BACKPACK;
             case States.DISAPEARED: return CurrentState == States.DISAPEARING;
         }
 
@@ -241,10 +241,6 @@ public class HarvestBlock : MonoBehaviour
         public override void OnStart()
         {
             _args.AttachToBackpack(MasterBlock.transform, _args.placeIndex);
-            /*MasterBlock.transform
-                .DOJump(_args.GetPositionInBackPack(_args.placeIndex), 1, 1, 0.1f)
-                .OnComplete(() => _inBackPack = true)
-                .Play();*/
         }
 
 
@@ -288,11 +284,13 @@ public class HarvestBlock : MonoBehaviour
     {
         public struct Args
         {
+            public Action<Transform> DetachFromBackpack;
             public Action<HarvestBlock> OnBlockDisapeared;
         }
 
         private readonly Args _args;
 
+        private bool _canDisapear = false;
 
         public Disapeare(Args args, HarvestBlock master, Action<States, object> ToChangeState) : base(master, ToChangeState)
         {
@@ -302,15 +300,38 @@ public class HarvestBlock : MonoBehaviour
 
         public override void Update()
         {
-            //...
-
+            if (_canDisapear)
+            {
+                Finish();
+            }
         }
 
-        
+
+        public override void OnStart()
+        {
+            FlyBeforeDeisappeare();
+        }
+
+
+        private void FlyBeforeDeisappeare()
+        {
+            var constants = GameConstants.GetInstance();
+            var distance = constants.blockFlyDistanceOnSell;
+            var duration = constants.blockFlyDurationOnSell;
+
+            MasterBlock.transform
+                .DOMoveY(distance, duration)
+                .SetRelative(true)
+                .OnComplete(() => _canDisapear = true)
+                .Play();
+        }
+
+
         private void Finish()
         {
+            _args.DetachFromBackpack(MasterBlock.transform);
             _args.OnBlockDisapeared(MasterBlock);
-            ChangeState(States.NONE, null);
+            ChangeState(States.DISAPEARED, null);
         }
     }
 
