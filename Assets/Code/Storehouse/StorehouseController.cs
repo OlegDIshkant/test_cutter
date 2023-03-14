@@ -6,6 +6,7 @@ public class StorehouseController : IStorehouseInfoProvider
     private readonly Storehouse _storehouse;
 
     public bool PlayerInStorehouseNow { get; private set; }
+    public Vector3 BlocksVanishPoint => _storehouse.BlocksVanishPoint;
 
 
     public StorehouseController()
@@ -25,4 +26,5 @@ public class StorehouseController : IStorehouseInfoProvider
 public interface IStorehouseInfoProvider
 {
     bool PlayerInStorehouseNow { get; }
+    public Vector3 BlocksVanishPoint { get; }
 }

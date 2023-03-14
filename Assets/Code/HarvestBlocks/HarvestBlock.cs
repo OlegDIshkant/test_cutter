@@ -285,6 +285,7 @@ public class HarvestBlock : MonoBehaviour
         public struct Args
         {
             public Action<Transform> DetachFromBackpack;
+            public Vector3 vanishPoint;
             public Action<HarvestBlock> OnBlockDisapeared;
         }
 
@@ -309,27 +310,37 @@ public class HarvestBlock : MonoBehaviour
 
         public override void OnStart()
         {
-            FlyBeforeDeisappeare();
+            FlyToVanishPoint();
         }
 
 
-        private void FlyBeforeDeisappeare()
+        private void FlyToVanishPoint()
         {
             var constants = GameConstants.GetInstance();
             var distance = constants.blockFlyDistanceOnSell;
             var duration = constants.blockFlyDurationOnSell;
+            var vanishPoint = _args.vanishPoint;
 
-            MasterBlock.transform
+            var sequence = DOTween.Sequence();
+
+            sequence.Append(
+                MasterBlock.transform
                 .DOMoveY(distance, duration)
                 .SetRelative(true)
-                .OnComplete(() => _canDisapear = true)
-                .Play();
+                .OnComplete(() => _args.DetachFromBackpack(MasterBlock.transform)));
+
+            sequence.Append(
+                MasterBlock.transform
+                .DOMove(vanishPoint, duration)
+                .OnComplete(() => _canDisapear = true));
+
+            sequence.Play();
         }
 
 
         private void Finish()
         {
-            _args.DetachFromBackpack(MasterBlock.transform);
+            ;
             _args.OnBlockDisapeared(MasterBlock);
             ChangeState(States.DISAPEARED, null);
         }

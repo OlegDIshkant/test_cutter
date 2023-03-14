@@ -28,7 +28,7 @@ public class Game : MonoBehaviour
         _storehouse.Update();
         _player.Update(_storehouse, _gardenSpots);
         _gardenSpots.Update(_player);
-        _harvestBlocks.Update(_player, _gardenSpots);
+        _harvestBlocks.Update(_player, _gardenSpots, _storehouse);
         _ui.Update(_harvestBlocks);
     }
 }

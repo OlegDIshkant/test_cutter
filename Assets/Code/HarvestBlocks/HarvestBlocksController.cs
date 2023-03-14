@@ -23,11 +23,11 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     }
 
 
-    public void Update(IPlayerInfoProvider player, IGardenSpotsInfoProvider gardenSpots)
+    public void Update(IPlayerInfoProvider player, IGardenSpotsInfoProvider gardenSpots, IStorehouseInfoProvider storehouse)
     {
         SpawnBlocksForRippedPlants(gardenSpots);
         UpdateBackpack(player);
-        SellingBlocksInBackpack(player);
+        SellingBlocksInBackpack(player, storehouse);
         DeleteSelledBlocks();
     }
 
@@ -50,8 +50,8 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     }
 
 
-    private void SellingBlocksInBackpack(IPlayerInfoProvider player) =>
-        StartSelling(FindBlockToSell(player));
+    private void SellingBlocksInBackpack(IPlayerInfoProvider player, IStorehouseInfoProvider storehouse) =>
+        StartSelling(FindBlockToSell(player), storehouse.BlocksVanishPoint);
 
 
     private void DeleteSelledBlocks()
@@ -144,8 +144,8 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
     }
 
 
-    private void StartSelling(HarvestBlock block) =>
-        block?.ChangeState(HarvestBlock.States.DISAPEARING, DisapearArgs());
+    private void StartSelling(HarvestBlock block, Vector3 blockVanishPoint) =>
+        block?.ChangeState(HarvestBlock.States.DISAPEARING, DisapearArgs(blockVanishPoint));
 
 
     private HarvestBlock.Appear.Args PrepareArgsForNewBlock(HarvestBlock block, PlantRipInfo ripInfo) =>
@@ -185,9 +185,10 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
 
 
 
-    private HarvestBlock.Disapeare.Args DisapearArgs() =>
+    private HarvestBlock.Disapeare.Args DisapearArgs(Vector3 blockVanishPoint) =>
         new HarvestBlock.Disapeare.Args()
         {
+            vanishPoint = blockVanishPoint,
             DetachFromBackpack = DetachFromBackpack,
             OnBlockDisapeared = OnBlockDisapeared
         };
