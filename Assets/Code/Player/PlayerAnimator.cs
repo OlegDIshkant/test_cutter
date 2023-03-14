@@ -56,10 +56,7 @@ public class PlayerAnimator : MonoBehaviour
 
     private void MakeSureRipTriggerReset()
     {
-        if (IsRipAnimationPlaying())
-        {
-            _animator.ResetTrigger(RIP_ANIM_ID);
-        }
+        _animator.ResetTrigger(RIP_ANIM_ID);
     }
 
 
