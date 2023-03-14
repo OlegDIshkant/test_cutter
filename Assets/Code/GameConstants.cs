@@ -59,4 +59,6 @@ public class GameConstants : ScriptableObject
 
     public int moneyPerCoin;
 
+    public float moneyGainAnimDuration;
+
 }

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerTag: Player
   maxAngleToRipPlant: 5
-  turningToPlantAngleSpeed: 3
+  turningToPlantAngleSpeed: 5
   playerSpeed: 5
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
@@ -32,3 +32,4 @@ MonoBehaviour:
   coinDeliveryDuration: 2
   coinDeliveryDelay: 0.8
   moneyPerCoin: 15
+  moneyGainAnimDuration: 1

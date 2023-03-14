@@ -21,7 +21,8 @@ public class UiController
     public void Update(IHarvestBlocksInfoProvider harvestBlocks, IStorehouseInfoProvider storehouse)
     {
         UpdateBlocksCounter(harvestBlocks);
-        CoinDelivery(harvestBlocks, storehouse);
+        CoinDelivery(harvestBlocks, storehouse, out var moneyToAdd);
+        UpdateMoneyCounter(moneyToAdd);
     }
 
 
@@ -31,14 +32,15 @@ public class UiController
         _blocksCounter.SetCurrent(harvestBlocks.BlocksInBackpackAmount);
     }
 
-    private void CoinDelivery(IHarvestBlocksInfoProvider harvestBlocks, IStorehouseInfoProvider storehouse)
+    private void CoinDelivery(IHarvestBlocksInfoProvider harvestBlocks, IStorehouseInfoProvider storehouse, out int moneyToAdd)
     {
-        _moneyDelivery.Update(
+        var result = _moneyDelivery.Update(
             new InputInfo() 
             { 
                 blocksVanishPoint = storehouse.BlocksVanishPoint,
                 blockSoldThisFrame = harvestBlocks.BlocksSoldThisFrame 
             });
+        moneyToAdd = result.moneyToAdd;
     }
 
 
@@ -49,6 +51,12 @@ public class UiController
         result.SetParent(_canvas.transform);
         result.position = position;
         return result;
+    }
+
+
+    private void UpdateMoneyCounter(int moneyToAdd)
+    {
+        _moneyCounter.AddMoney(moneyToAdd);
     }
 
 }
