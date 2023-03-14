@@ -71,17 +71,20 @@ public class MoneyDelivery
     private Tween PrepareTweenForCoin(RectTransform coin)
     {
         var duration = GameConstants.GetInstance().coinDeliveryDuration;
+        var halDuration = duration / 2;
+        var zeroScale = Vector3.zero;
         var scaleFactor = 2f;
         var higherScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         var delay = GameConstants.GetInstance().coinDeliveryDelay;
 
         var seq = DOTween.Sequence();
         seq
+            .AppendCallback(() => coin.localScale = zeroScale)
             .AppendCallback(() => coin.gameObject.SetActive(false))
             .AppendInterval(delay)
             .AppendCallback(() => coin.gameObject.SetActive(true))
             .Append(coin.DOMove(_uiDelivaryTarget, duration))
-            .Join(coin.DOScale(higherScale, duration / 2).SetLoops(2, LoopType.Yoyo))
+            .Join(coin.DOScale(higherScale, halDuration).SetLoops(2, LoopType.Yoyo))
             .AppendCallback(() => coin.gameObject.SetActive(false));
 
         return seq;
