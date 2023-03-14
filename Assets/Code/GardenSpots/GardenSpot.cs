@@ -45,12 +45,40 @@ public class GardenSpot : MonoBehaviour
     private void SetUpPlants()
     {
         HarvestablePlantIds = new ReadOnlyCollection<int>(_harvestablePlantIds);
-        _plants = this.transform.GetComponentsInChildren<Plant>().ToList();
+
+        _plants = SpawnPlants();
         foreach (var plant in _plants)
         {
+            PlacePlant(plant);
             plant.OnCanBeHarvestedNow += Plant_OnCanBeHarvestedNow;
             plant.OnCanNotBeHarvestedNow += Plant_OnCanNotBeHarvestedNow;
         }
+    }
+
+
+    private List<Plant> SpawnPlants()
+    {
+        var prefab = Resources.Load(GameConstants.GetInstance().pathToPlantPrefab);
+        var plantsAmount = GameConstants.GetInstance().plantsPerGardenSpot;
+
+        return Enumerable.Range(0, plantsAmount)
+            .Select(_ => (GameObject)GameObject.Instantiate(prefab))
+            .Select(go => go.GetComponent<Plant>())
+            .ToList();
+    }
+
+
+    private void PlacePlant(Plant plant)
+    {
+        var side = 0.8f;
+
+        var newPosition = new Vector3(
+            UnityEngine.Random.Range(-side, side),
+            0,
+            UnityEngine.Random.Range(-side, side));
+
+        plant.transform.SetParent(this.transform, worldPositionStays: false);
+        plant.transform.localPosition = newPosition;
     }
 
 

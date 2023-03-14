@@ -61,4 +61,8 @@ public class GameConstants : ScriptableObject
 
     public float moneyGainAnimDuration;
 
+
+    public int plantsPerGardenSpot;
+    public string pathToPlantPrefab;
+
 }

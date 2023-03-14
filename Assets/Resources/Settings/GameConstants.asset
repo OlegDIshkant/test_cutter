@@ -18,7 +18,7 @@ MonoBehaviour:
   playerSpeed: 5
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
-  secToRegeneratePlant: 2
+  secToRegeneratePlant: 10
   blockAppearDistance: 2.5
   backpackWidth: 4
   backpackHeight: 5
@@ -33,3 +33,5 @@ MonoBehaviour:
   coinDeliveryDelay: 0.8
   moneyPerCoin: 15
   moneyGainAnimDuration: 1
+  plantsPerGardenSpot: 5
+  pathToPlantPrefab: Prefabs/Plant
