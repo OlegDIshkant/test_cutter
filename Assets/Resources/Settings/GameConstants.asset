@@ -15,7 +15,7 @@ MonoBehaviour:
   playerTag: Player
   maxAngleToRipPlant: 5
   turningToPlantAngleSpeed: 5
-  playerSpeed: 5
+  playerSpeed: 4
   pathToHarvestBlockPrefab: Prefabs/HarvestBlock
   backpackCapacity: 40
   secToRegeneratePlant: 10

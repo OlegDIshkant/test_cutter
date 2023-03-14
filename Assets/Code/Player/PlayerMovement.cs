@@ -22,30 +22,20 @@ public class PlayerMovement
     {
         return new Result()
         {
-            //velocity = input.rippingInProgress ? Vector3.zero : CalcVelocity(CalcMoveVector())
-            velocity = CalcVelocity(CalcMoveVector())
+            velocity = CalcVelocity(input.inputMoveVector)
         };
     }
 
 
-    private Vector3? CalcMoveVector()
+    private Vector3 CalcVelocity(Vector3 moveVector)
     {
-        // Временное управление
-        if (Input.GetKey(KeyCode.W))        return Vector3.forward;
-        else if (Input.GetKey(KeyCode.S))   return Vector3.back;
-        else if (Input.GetKey(KeyCode.A))   return Vector3.left;
-        else if (Input.GetKey(KeyCode.D))   return Vector3.right;
+        if (moveVector.magnitude < 0.3f)
+            return Vector3.zero;
 
-        return null;
-        //
-    }
-
-
-    private Vector3 CalcVelocity(Vector3? moveVector)
-    {
-        return moveVector == null ? 
-            Vector3.zero : 
-            moveVector.Value * _speed;
+        return new Vector3(
+            moveVector.x,
+            0,
+            moveVector.y) * _speed;
     }
 
 

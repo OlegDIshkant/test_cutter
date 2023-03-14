@@ -26,7 +26,7 @@ public class Game : MonoBehaviour
     {
         // Порядок обновления контроллеров важен!!!
         _storehouse.Update();
-        _player.Update(_storehouse, _gardenSpots);
+        _player.Update(_storehouse, _gardenSpots, _ui);
         _gardenSpots.Update(_player);
         _harvestBlocks.Update(_player, _gardenSpots, _storehouse);
         _ui.Update(_harvestBlocks, _storehouse);

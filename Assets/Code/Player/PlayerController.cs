@@ -46,9 +46,9 @@ public class PlayerController : IPlayerInfoProvider
             GetPlayerRotation: () => _rotatableBody.rotation);
     }
 
-    public void Update(IStorehouseInfoProvider storehouse, IGardenSpotsInfoProvider gardenSpots)
+    public void Update(IStorehouseInfoProvider storehouse, IGardenSpotsInfoProvider gardenSpots, IUiInfoProvider ui)
     {
-        var playerInfo = UpdatePlayer(gardenSpots);
+        var playerInfo = UpdatePlayer(gardenSpots, ui);
         UpdateOutput(storehouse, playerInfo);
     }
 
@@ -66,12 +66,13 @@ public class PlayerController : IPlayerInfoProvider
     }
 
 
-    private PlayerInfo UpdatePlayer(IGardenSpotsInfoProvider gardenSpots)
+    private PlayerInfo UpdatePlayer(IGardenSpotsInfoProvider gardenSpots, IUiInfoProvider ui)
     {
         var input = new InputArgs()
-        { 
+        {
             rippingInProgress = _animator.IsRipAnimationPlaying(),
-            rippablePlantPosition = gardenSpots.NearPlayerPlantPosition
+            rippablePlantPosition = gardenSpots.NearPlayerPlantPosition,
+            inputMoveVector = ui.MoveVector
         };
 
         var moveInfo = _movement.MakeDecision(input);

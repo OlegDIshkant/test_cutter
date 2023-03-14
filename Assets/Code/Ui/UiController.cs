@@ -1,19 +1,23 @@
 using System.Data;
 using UnityEngine;
 
-public class UiController 
+public class UiController : IUiInfoProvider
 {
     private readonly BlocksCounter _blocksCounter;
     private readonly MoneyDelivery _moneyDelivery;
     private readonly MoneyCounter _moneyCounter;
+    private readonly Joystick _joystick;
     private readonly Canvas _canvas;
 
+    public Vector3 MoveVector { get; private set; }
 
     public UiController()
     {
         _canvas = GameObject.FindObjectOfType<Canvas>();
         _blocksCounter = GameObject.FindObjectOfType<BlocksCounter>();
         _moneyCounter = GameObject.FindObjectOfType<MoneyCounter>();
+        _joystick = GameObject.FindObjectOfType<Joystick>();
+        _joystick.CanvasScaleFactor = _canvas.scaleFactor;
         _moneyDelivery = new MoneyDelivery(SpawnPrefabOnCanvas, _moneyCounter.CanvasPosition);
     }
 
@@ -23,6 +27,7 @@ public class UiController
         UpdateBlocksCounter(harvestBlocks);
         CoinDelivery(harvestBlocks, storehouse, out var moneyToAdd);
         UpdateMoneyCounter(moneyToAdd);
+        CheckoutJoystick();
     }
 
 
@@ -59,4 +64,16 @@ public class UiController
         _moneyCounter.AddMoney(moneyToAdd);
     }
 
+
+    private void CheckoutJoystick()
+    {
+        MoveVector = _joystick.MoveVector;
+    }
+
+}
+
+
+public interface IUiInfoProvider
+{
+    public Vector3 MoveVector { get; }
 }

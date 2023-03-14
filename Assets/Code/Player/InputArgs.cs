@@ -6,5 +6,6 @@ public struct InputArgs
 {
     public bool rippingInProgress;
     public Vector3? rippablePlantPosition;
+    public Vector3 inputMoveVector;
 
 }
