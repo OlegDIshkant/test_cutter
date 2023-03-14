@@ -648,6 +648,7 @@ GameObject:
   - component: {fileID: 300713453}
   - component: {fileID: 300713455}
   - component: {fileID: 300713454}
+  - component: {fileID: 300713456}
   m_Layer: 5
   m_Name: MoneyCounter
   m_TagString: Untagged
@@ -672,9 +673,9 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -20, y: -20}
+  m_AnchoredPosition: {x: -95, y: -45}
   m_SizeDelta: {x: 150, y: 50}
-  m_Pivot: {x: 1, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &300713454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -713,6 +714,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 300713452}
   m_CullTransparentMesh: 1
+--- !u!114 &300713456
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300713452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbad2650e86bf7f438d4843257e7094c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &456828421
 PrefabInstance:
   m_ObjectHideFlags: 0

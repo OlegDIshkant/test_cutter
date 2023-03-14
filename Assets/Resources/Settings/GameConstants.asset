@@ -28,3 +28,7 @@ MonoBehaviour:
   blockInBackpackShrinkFactor: 2
   blockFlyDistanceOnSell: 0.8
   blockFlyDurationOnSell: 0.1
+  pathToCoinPrefab: Prefabs/Coin
+  coinDeliveryDuration: 2
+  coinDeliveryDelay: 0.8
+  moneyPerCoin: 15

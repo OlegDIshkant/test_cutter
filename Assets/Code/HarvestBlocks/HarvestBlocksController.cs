@@ -12,6 +12,8 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
 
     public int BackpackCapacity { get; }
     public int BlocksInBackpackAmount => _blocksInBackpack.Count;
+    public int BlocksSoldThisFrame { get; private set; }
+
 
 
     public HarvestBlocksController()
@@ -56,10 +58,12 @@ public class HarvestBlocksController : IHarvestBlocksInfoProvider
 
     private void DeleteSelledBlocks()
     {
+        BlocksSoldThisFrame = 0;
         foreach (var block in _selledBlocks)
         {
             _blocks.Remove(block);
             GameObject.Destroy(block.gameObject);
+            BlocksSoldThisFrame++;
         }
         _selledBlocks.Clear();
     }
@@ -200,4 +204,5 @@ public interface IHarvestBlocksInfoProvider
 {
     int BackpackCapacity { get; }
     int BlocksInBackpackAmount { get; }
+    int BlocksSoldThisFrame { get; }
 }

@@ -52,4 +52,11 @@ public class GameConstants : ScriptableObject
     public float blockFlyDistanceOnSell;
     public float blockFlyDurationOnSell;
 
+
+    public string pathToCoinPrefab;
+    public float coinDeliveryDuration;
+    public float coinDeliveryDelay;
+
+    public int moneyPerCoin;
+
 }
