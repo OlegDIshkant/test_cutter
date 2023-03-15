@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9145a9e33b9a2444698899cf1be9a638, type: 3}
+  m_Name: GameConstants
+  m_EditorClassIdentifier: 
+  playerTag: Player
+  maxAngleToRipPlant: 5
+  turningToPlantAngleSpeed: 30
+  playerSpeed: 4
+  pathToHarvestBlockPrefab: Prefabs/HarvestBlock
+  backpackCapacity: 40
+  secToRegeneratePlant: 10
+  blockAppearDistance: 2.5
+  backpackWidth: 4
+  backpackHeight: 5
+  heightDistance: 0.18
+  widthDistance: 0.17
+  lenghtDistance: 0.22
+  blockInBackpackShrinkFactor: 2
+  blockFlyDistanceOnSell: 0.8
+  blockFlyDurationOnSell: 0.1
+  pathToCoinPrefab: Prefabs/Coin
+  coinDeliveryDuration: 1
+  coinDeliveryDelay: 0.8
+  coinStartScale: {x: 1, y: 1, z: 1}
+  coinMidScale: {x: 2, y: 2, z: 2}
+  coinEndScale: {x: 0.8, y: 0.8, z: 0.8}
+  moneyPerCoin: 15
+  moneyGainAnimDuration: 1
+  plantsPerGardenSpot: 5
+  pathToPlantPrefab: Prefabs/Plant
