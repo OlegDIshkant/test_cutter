@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -53,7 +54,7 @@ public class Joystick : MonoBehaviour
 
     private bool IsPressed(out Vector3 screenPosition)
     {
-#if PLATFORM_STANDALONE
+#if PLATFORM_STANDALONE || UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
             screenPosition = Input.mousePosition / CanvasScaleFactor;
@@ -61,10 +62,9 @@ public class Joystick : MonoBehaviour
         }
 #else
 
-        var touch = Input.GetTouch(0);
-        if (touch.pressure > 0f)
+        if (Input.touches.Length > 0)
         {
-            screenPosition = touch.position / CanvasScaleFactor;
+            screenPosition = Input.GetTouch(0).position / CanvasScaleFactor;
             return true;
         }
 #endif
