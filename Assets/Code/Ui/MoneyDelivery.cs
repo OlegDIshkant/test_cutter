@@ -24,7 +24,9 @@ public class MoneyDelivery
     private readonly Func<string, Vector2, RectTransform> _SpawnPrefabOnCanvas;
 
 
-    public MoneyDelivery(Func<string, Vector2, RectTransform> SpawnPrefabOnCanvas, Vector3 uiDelivaryTarget)
+    public MoneyDelivery(
+        Func<string, Vector2, RectTransform> SpawnPrefabOnCanvas, 
+        Vector3 uiDelivaryTarget)
     {
         _uiDelivaryTarget = uiDelivaryTarget;
         _SpawnPrefabOnCanvas = SpawnPrefabOnCanvas;
@@ -50,8 +52,8 @@ public class MoneyDelivery
 
     private void StartDelivery(Vector3 blocksVanishPoint)
     {
-        var coin = SpawnCoin(blocksVanishPoint);
-        var delivery = new DeliveryInfo() { coin = coin, tween = PrepareTweenForCoin(coin) };
+        var coin = _SpawnPrefabOnCanvas(GameConstants.GetInstance().pathToCoinPrefab, Vector3.zero);
+        var delivery = new DeliveryInfo() { coin = coin, tween = PrepareTweenForCoin(coin, blocksVanishPoint) };
         _deliveries.Add(delivery);
 
         delivery.tween
@@ -60,31 +62,24 @@ public class MoneyDelivery
     }
 
 
-    private RectTransform SpawnCoin(Vector3 blocksVanishPoint)
+    private Tween PrepareTweenForCoin(RectTransform coin, Vector3 blocksVanishPoint)
     {
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(blocksVanishPoint);
-        Vector3 uiPos = new Vector2(screenPos.x, /*Screen.height - */screenPos.y);
-        return _SpawnPrefabOnCanvas(GameConstants.GetInstance().pathToCoinPrefab, uiPos);
-    }
+        var constants = GameConstants.GetInstance();
 
-
-    private Tween PrepareTweenForCoin(RectTransform coin)
-    {
-        var duration = GameConstants.GetInstance().coinDeliveryDuration;
-        var halDuration = duration / 2;
-        var zeroScale = Vector3.zero;
-        var scaleFactor = 2f;
-        var higherScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        var delay = GameConstants.GetInstance().coinDeliveryDelay;
+        var duration = constants.coinDeliveryDuration;
+        var halfDuration = duration / 2;
+        var delay = constants.coinDeliveryDelay;
 
         var seq = DOTween.Sequence();
         seq
-            .AppendCallback(() => coin.localScale = zeroScale)
+            .AppendCallback(() => coin.localScale = constants.coinStartScale)
             .AppendCallback(() => coin.gameObject.SetActive(false))
             .AppendInterval(delay)
+            .AppendCallback(() => coin.position = CalcDeliveryStartPosition(blocksVanishPoint))
             .AppendCallback(() => coin.gameObject.SetActive(true))
             .Append(coin.DOMove(_uiDelivaryTarget, duration))
-            .Join(coin.DOScale(higherScale, halDuration).SetLoops(2, LoopType.Yoyo))
+            .Join(coin.DOScale(constants.coinMidScale, halfDuration))
+            .Insert(delay + halfDuration, coin.DOScale(constants.coinEndScale, halfDuration))
             .AppendCallback(() => coin.gameObject.SetActive(false));
 
         return seq;
@@ -103,6 +98,13 @@ public class MoneyDelivery
         }
 
         _finishedDeliveries.Clear();
+    }
+
+
+    private Vector3 CalcDeliveryStartPosition(Vector3 blocksVanishPoint)
+    {
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(blocksVanishPoint);
+        return new Vector2(screenPos.x, screenPos.y);
     }
 
 }

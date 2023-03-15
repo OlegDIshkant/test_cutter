@@ -57,6 +57,10 @@ public class GameConstants : ScriptableObject
     public float coinDeliveryDuration;
     public float coinDeliveryDelay;
 
+    public Vector3 coinStartScale;
+    public Vector3 coinMidScale;
+    public Vector3 coinEndScale;
+
     public int moneyPerCoin;
 
     public float moneyGainAnimDuration;

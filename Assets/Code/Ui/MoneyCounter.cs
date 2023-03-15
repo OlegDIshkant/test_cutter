@@ -60,7 +60,7 @@ public class MoneyCounter : MonoBehaviour
         var seq = DOTween.Sequence();
         _gainAnimation = seq
             .AppendCallback(() => ResetInitialPosition()) // ѕредотвращ€ем смещение из-за тр€ски 
-            .Append(transform.DOShakePosition(duration, 3))
+            .Append(transform.DOShakePosition(duration, 20, 100))
             .Join(TextAnim(duration))
             .AppendCallback(() => ResetInitialPosition()) // ѕредотвращ€ем смещение из-за тр€ски 
             .Play();
